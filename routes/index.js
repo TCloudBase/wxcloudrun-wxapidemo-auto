@@ -9,7 +9,8 @@ router.get('/', async function (req, res, next) {
 router.post('/sec', async function (req, res, next) {
   let result = {
     errcode: 0,
-    errmsg: 'ok'
+    errmsg: 'ok',
+    headers: req.headers
   }
   const text = req.body.content || null
   if (text != null) {
