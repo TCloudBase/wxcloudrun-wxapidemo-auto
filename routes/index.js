@@ -13,7 +13,21 @@ router.post('/sec', async function (req, res, next) {
   }
   const text = req.body.content || null
   if (text != null) {
-    result = await wxapi.call('msg_sec_check', {
+    result = await wxapi.call('wxa/msg_sec_check', {
+      content: text
+    })
+  }
+  res.json(result)
+})
+
+router.post('/sec2', async function (req, res, next) {
+  let result = {
+    errcode: 0,
+    errmsg: 'ok'
+  }
+  const text = req.body.content || null
+  if (text != null) {
+    result = await wxapi.callAuth('wxa/msg_sec_check', {
       content: text
     })
   }

@@ -22,7 +22,7 @@ async function call (name, data) {
   if (token !== false) {
     var options = {
       method: 'POST',
-      url: `https://api.weixin.qq.com/wxa/${name}?cloudbase_access_token=${token}`,
+      url: `https://api.weixin.qq.com/${name}?cloudbase_access_token=${token}`,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -45,7 +45,28 @@ async function call (name, data) {
   }
 }
 
+async function callAuth (name, data) {
+  var options = {
+    method: 'POST',
+    url: `https://api.weixin.qq.com/${name}`,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+
+  }
+  return new Promise((resolve, reject) => {
+    request(options, function (error, response) {
+      if (error) {
+        reject(error)
+      }
+      resolve(JSON.parse(response.body))
+    })
+  })
+}
+
 module.exports = {
   getToken,
-  call
+  call,
+  callAuth
 }

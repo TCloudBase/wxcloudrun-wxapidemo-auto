@@ -28,13 +28,20 @@
 1. 如果你的技术栈也是 nodejs + express ，可以直接复用 `/work/wxapi.js` 文件，使用方法如下：
   ``` js
   const wxapi = require('/work/wxapi') //引入文件
-  // msg_sec_check 替换自己想要触发的微信服务API，后面的对象为API需要的数据
-  result = await wxapi.call('msg_sec_check', {
+  // wxa/msg_sec_check 替换自己想要触发的微信服务API，后面的对象为API需要的数据
+  result = await wxapi.call('wxa/msg_sec_check', {
     content: text
   })
   ```
 
-2. 使用微信API，一定记得前往「控制台-云调用」中配置令牌权限，你也可以直接使用微信云托管提供的接口服务，这需要耗费资源安装一个单独的服务，按照自己的业务需求自己决定，大部分轻量使用需求，按照本项目的做法可以轻松做到。
+2. 使用微信API，一定记得前往「控制台-云调用」中配置令牌权限，你也可以直接使用微信云托管提供的开放接口服务，以旁加载形式部署到服务中，占用计算资源和内存极小（约 5MB），与服务共用资源。如果开启，可以使用如下方式来调用，替换上边的：
+  ``` js
+  const wxapi = require('/work/wxapi') //引入文件
+  // 如果你开启了开放服务，则可以直接使用如下方式
+  result = await wxapi.callAuth('wxa/msg_sec_check', {
+    content: text
+  })
+  ```
 
 3. 后续在控制台中会支持自定义域名什么的，记得常来看看更新。
 
