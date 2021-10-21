@@ -17,7 +17,6 @@ router.post('/sec', async function (req, res, next) {
       content: text
     })
   }
-  console.log('token接口返回结果：', result)
   res.json(result)
 })
 
