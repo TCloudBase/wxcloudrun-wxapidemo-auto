@@ -1,7 +1,11 @@
+html{
+  height: 100%;
+}
 body{
   margin: 0;
   background: #f6f6f6;
   display: flex;
+  height: 100%;
 }
 .show{
   display: flex;

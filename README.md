@@ -1,6 +1,6 @@
 # 微信云托管｜云调用使用
 
-[<img src="https://main.qcloudimg.com/raw/ffa781b63fdead4cac23470ad2eeb552.png" width="220px">]()
+[<img src="https://main.qcloudimg.com/raw/ffa781b63fdead4cac23470ad2eeb552.png" width="220px">](https://cloud.weixin.qq.com/cloudrun/onekey?template=wxapidemo)
 
 ## 项目介绍
 
@@ -12,7 +12,7 @@
 
 ## 部署流程
 
-- 一键部署方式：点击此链接跳转至控制台安装【敬请期待】
+- 一键部署方式：点击[此链接](https://cloud.weixin.qq.com/cloudrun/onekey?template=wxapidemo)跳转至控制台安装
 
 - 一键部署结束后，需要前往「控制台-云调用」中配置令牌权限，添加一行 `/wxa/msg_sec_check`
 
