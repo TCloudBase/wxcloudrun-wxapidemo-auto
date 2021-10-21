@@ -3,38 +3,39 @@ const request = require('request')
 const demo = null
 
 function getToken () {
+  const res = {}
   if (demo != null) {
-    return demo
+    res.token = demo
   } else {
-    return new Promise((resolve, reject) => {
-      fs.readFile('/.tencentcloudbase/wx/cloudbase_access_token', 'utf8', (err, data) => {
-        if (err) {
-          resolve(false)
-        }
-        resolve(data)
-      })
-    })
+    try {
+      res.token = fs.readFileSync('/.tencentcloudbase/wx/cloudbase_access_token', 'utf-8')
+      res.ca = fs.readFileSync('/app/cert/certificate.crt', 'utf-8')
+    } catch (e) {
+      console.log(e.toString())
+    }
   }
+  return res
 }
 
 async function call (name, data) {
-  const token = await getToken()
-  if (token !== false) {
+  const token = getToken()
+  if (token.token != null) {
     var options = {
       method: 'POST',
-      url: `https://api.weixin.qq.com/${name}?cloudbase_access_token=${token}`,
+      url: `https://api.weixin.qq.com/${name}${token.ca == null ? '?cloudbase_access_token=' + token.token : ''}`,
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(data)
-
+      body: JSON.stringify(data),
+      ca: token.ca
     }
     return new Promise((resolve, reject) => {
       request(options, function (error, response) {
         if (error) {
           reject(error)
         }
-        resolve(JSON.parse(response.body))
+        console.log(`${token.ca == null ? 'token调用' : '开放服务调用'}：`, typeof response === 'object' ? response.body : response)
+        resolve(typeof response === 'object' ? JSON.parse(response.body || '{}') : {})
       })
     })
   } else {
@@ -45,28 +46,7 @@ async function call (name, data) {
   }
 }
 
-async function callAuth (name, data) {
-  var options = {
-    method: 'POST',
-    url: `https://api.weixin.qq.com/${name}`,
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-
-  }
-  return new Promise((resolve, reject) => {
-    request(options, function (error, response) {
-      if (error) {
-        reject(error)
-      }
-      resolve(JSON.parse(response.body))
-    })
-  })
-}
-
 module.exports = {
   getToken,
-  call,
-  callAuth
+  call
 }

@@ -9,8 +9,7 @@ router.get('/', async function (req, res, next) {
 router.post('/sec', async function (req, res, next) {
   let result = {
     errcode: 0,
-    errmsg: 'ok',
-    headers: req.headers
+    errmsg: 'ok'
   }
   const text = req.body.content || null
   if (text != null) {
@@ -18,20 +17,7 @@ router.post('/sec', async function (req, res, next) {
       content: text
     })
   }
-  res.json(result)
-})
-
-router.post('/sec2', async function (req, res, next) {
-  let result = {
-    errcode: 0,
-    errmsg: 'ok'
-  }
-  const text = req.body.content || null
-  if (text != null) {
-    result = await wxapi.callAuth('wxa/msg_sec_check', {
-      content: text
-    })
-  }
+  console.log('token接口返回结果：', result)
   res.json(result)
 })
 
