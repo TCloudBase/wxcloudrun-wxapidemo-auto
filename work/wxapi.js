@@ -61,7 +61,9 @@ async function call (name, data, ssl = true) {
             })
           }
         } else {
-          console.log(`${token.ca == null && ssl === true ? 'token调用' : '开放服务调用'}：`, response.body)
+          const seqid = response.headers['x-openapi-seqid']
+          console.log(`${seqid != null ? '开放服务调用｜' + seqid : 'AccessToken调用'}`)
+          console.log('返回结果：', response.body)
           try {
             resolve(JSON.parse(response.body))
           } catch (e) {
