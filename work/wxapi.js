@@ -21,12 +21,12 @@ function getToken() {
   return res
 }
 
-async function post(name, method, data, ssl = true) {
+async function post(name, data, ssl = true) {
   return call(name, 'POST', data, ssl)
 }
 
 
-async function get(name, method, data, ssl = true) {
+async function get(name, data, ssl = true) {
   return call(name, 'GET', data, ssl)
 }
 
