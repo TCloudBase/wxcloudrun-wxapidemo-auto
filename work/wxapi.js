@@ -46,7 +46,7 @@ async function call(name, method, data, ssl = true) {
     // ssl为false，说明尝试https遇到ssl问题，则证明是本地调试环境，并且开启了开放服务，所以http时无需传入token
     var options = {
       method: method,
-      url: `${ssl === true ? 'https' : 'http'}://api.weixin.qq.com/${name}?${token.ca == null && ssl === true ? 'cloudbase_access_token=' + token.token : ''}&${method === 'GET' && data ? data : ''}`,
+      url: `${ssl === true ? 'https' : 'http'}://api.weixin.qq.com/${name}?${ssl === true ? 'cloudbase_access_token=' + token.token : ''}&${method === 'GET' && data ? data : ''}`,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -54,7 +54,7 @@ async function call(name, method, data, ssl = true) {
       ca: token.ca,
       secureProtocol: 'TLSv1_2_method'
     }
-    console.log(`${ssl === true ? '发起https请求' : '发起http请求'}，${token.ca == null && ssl === true ? '带token' : '免token'}`)
+    console.log(`${ssl === true ? '发起https请求' : '发起http请求'}，${ssl === true ? '带token' : '免token'}`)
     return new Promise((resolve, reject) => {
       request(options, async function (error, response) {
         if (error) { // 请求有错误
