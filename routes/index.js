@@ -25,7 +25,12 @@ router.post('/wx/call', async function (req, res, next) {
       errmsg: 'ok'
     }
     if (!body.Recognition) {
-      result = await wxapi.get('wxa/msg_sec_check', `content=${body.Recognition}`, true)
+      result = await wxapi.post('wxa/msg_sec_check', {
+        openid: req.headers['x-wx-openid'],
+        version: 2,
+        scene: 2,
+        content: body.Recognition
+      }, true)
     }
 
     if (result.errcode !== 0) {
