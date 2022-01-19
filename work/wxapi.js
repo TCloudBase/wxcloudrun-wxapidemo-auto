@@ -2,7 +2,7 @@ const fs = require('fs')
 const request = require('request')
 const demo = null // 本地自验证时，指定token，不会读取容器挂载的token
 
-function getToken () {
+function getToken() {
   const res = {}
   if (demo != null) {
     res.token = demo
@@ -21,6 +21,15 @@ function getToken () {
   return res
 }
 
+async function post(name, method, data, ssl = true) {
+  return call(name, 'POST', data, ssl)
+}
+
+
+async function get(name, method, data, ssl = true) {
+  return call(name, 'GET', data, ssl)
+}
+
 /**
  *
  * @param {string} name API名称，路径内填写，只支持POST
@@ -28,7 +37,7 @@ function getToken () {
  * @param {boolean} ssl 是否https调用，默认是，如果是本地调试形态，会自动用否，不建议自主传入
  * @returns {object} 返回内容，api返回直接透传，网络问题则统一包装成与api回包一致
  */
-async function call (name, data, ssl = true) {
+async function call(name, method, data, ssl = true) {
   console.log(`\n--------- 请求发起【${name}】 ---------`)
   const token = getToken()
   if (token.token != null) { // 如果token存在，开始发起请求
@@ -36,12 +45,12 @@ async function call (name, data, ssl = true) {
     // ca文件不存在并且ssl为true时，则附加token，否则则不附加token
     // ssl为false，说明尝试https遇到ssl问题，则证明是本地调试环境，并且开启了开放服务，所以http时无需传入token
     var options = {
-      method: 'POST',
-      url: `${ssl === true ? 'https' : 'http'}://api.weixin.qq.com/${name}${token.ca == null && ssl === true ? '?cloudbase_access_token=' + token.token : ''}`,
+      method: method,
+      url: `${ssl === true ? 'https' : 'http'}://api.weixin.qq.com/${name}${token.ca == null && ssl === true ? '?cloudbase_access_token=' + token.token : ''}&${method === 'GET' && data ? data : ''}`,
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(data),
+      body: method === 'POST' && data ? JSON.stringify(data) : null,
       ca: token.ca,
       secureProtocol: 'TLSv1_2_method'
     }
@@ -86,5 +95,7 @@ async function call (name, data, ssl = true) {
 
 module.exports = {
   getToken,
-  call
+  call,
+  post,
+  get
 }
