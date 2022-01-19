@@ -25,15 +25,17 @@ router.post('/wx/call', async function (req, res, next) {
       errmsg: 'ok'
     }
     if (!body.Recognition) {
-      result = await wxapi.call('wxa/msg_sec_check', {
-        content: body.Recognition
-      })
+      result = await wxapi.get('wxa/msg_sec_check', `content=${body.Recognition}`)
     }
 
     if (result.errcode !== 0) {
       console.log('voice verify notice', body.Recognition)
     } else {
       console.log('voice upload.')
+      const { video_url, errcode, errmsg } = await wxapi.get('cgi-bin/media/get', `media_id=${body.MediaId}`)
+      if (!video_url) {
+        console.log('voice media error', errcode, errmsg)
+      }
     }
 
     res.json(result)
