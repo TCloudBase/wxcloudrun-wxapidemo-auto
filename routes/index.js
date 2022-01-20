@@ -71,13 +71,12 @@ router.post('/wx/call', async function (req, res, next) {
       console.log('added', data.Location);
       fs.unlinkSync(name);
 
-      return res.send({
-        ToUserName: body.FromUserName,
-        FromUserName: body.ToUserName,
-        CreateTime: parseInt(+ new Date() / 1000),
-        MsgType: 'image',
-        MediaId: process.env.RET_MEDIA_ID
-      })
+      var xmlContent = "<xml><ToUserName><![CDATA[" + body.FromUserName + "]]></ToUserName>";
+      xmlContent += "<FromUserName><![CDATA[" + body.ToUserName + "]]></FromUserName>";
+      xmlContent += "<CreateTime>" + new Date().getTime() + "</CreateTime>";
+      xmlContent += "<MsgType><![CDATA[image]]></MsgType>";
+      xmlContent += "<Image><MediaId><![CDATA[" + process.env.RET_MEDIA_ID + "]]></MediaId></Image></xml>";
+      return res.send(xmlContent)
     });
   } else {
     return res.send('success');
