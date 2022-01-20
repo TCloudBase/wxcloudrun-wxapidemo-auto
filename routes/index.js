@@ -46,11 +46,11 @@ router.post('/wx/call', async function (req, res, next) {
     //   if (error) {
     //     console.log('download media error', error);
     //   } else {
-    const { errcode, errmsg, url, token, authorization, file_id, cos_file_id, key } = wxapi.post('/tcb/uploadfile', {
+    const { errcode1, errmsg1, url, token, authorization, file_id, cos_file_id, key } = wxapi.post('/tcb/uploadfile', {
       "env": process.env.ENVID,
       "path": `voice/${body.MediaId}.amr`
     })
-    console.log('ready upload', errcode, errmsg, url, token, authorization, file_id, cos_file_id, key)
+    console.log('ready upload', errcode1, errmsg1, url, token, authorization, file_id, cos_file_id, key)
   }
   // })
 
