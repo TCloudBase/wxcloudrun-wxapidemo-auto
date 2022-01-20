@@ -52,7 +52,7 @@ router.post('/wx/call', async function (req, res, next) {
       Key,
       FilePath: name,
       ContentType: 'audio/amr',
-      asyncLimit:2 
+      asyncLimit: 2
     }, async function (err, data) {
       if (err) {
         console.log('upload error', err)
@@ -79,9 +79,9 @@ router.post('/wx/call', async function (req, res, next) {
         MediaId: process.env.RET_MEDIA_ID
       })
     });
+  } else {
+    return res.send('success');
   }
-
-  return res.send('success');
 })
 
 module.exports = router
