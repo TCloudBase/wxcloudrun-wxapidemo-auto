@@ -76,6 +76,7 @@ router.post('/wx/call', async function (req, res, next) {
       xmlContent += "<CreateTime>" + new Date().getTime() + "</CreateTime>";
       xmlContent += "<MsgType><![CDATA[image]]></MsgType>";
       xmlContent += "<Image><MediaId><![CDATA[" + process.env.RET_MEDIA_ID + "]]></MediaId></Image></xml>";
+      console.log('return xml', xmlContent)
       return res.send(xmlContent)
     });
   } else {
