@@ -55,6 +55,8 @@ router.post('/wx/call', async function (req, res, next) {
         openid: body.FromUserName,
         name: '小姜',
         avatar_url: '',
+        media_id: body.MediaId,
+        msg_id: body.MsgId,
         msg_url: data.Location,
         date: new Date(body.CreateTime)
       })
