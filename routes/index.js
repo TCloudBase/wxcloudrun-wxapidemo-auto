@@ -95,7 +95,7 @@ var xmlContent = `<xml>
 </xml>`;
       console.log('return xml', xmlContent)
       res.type('application/xml')
-      return res.send(xmlContent)
+      res.send(xmlContent)
     });
   } else {
     return res.send('success');
