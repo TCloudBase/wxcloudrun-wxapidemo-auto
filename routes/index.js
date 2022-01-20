@@ -10,8 +10,7 @@ router.post('/wx/call', async function (req, res, next) {
   const { headers, body } = req;
 
   if (!headers['x-wx-source']) {
-    res.send('fail');
-    return;
+    return res.send('fail');
   }
 
   console.log('wx call', body)
@@ -43,10 +42,10 @@ router.post('/wx/call', async function (req, res, next) {
       }
     }
 
-    res.json(result)
+    return res.json(result)
   }
 
-  res.send('success');
+  return res.send('success');
 })
 
 module.exports = router
