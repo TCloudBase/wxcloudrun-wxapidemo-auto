@@ -1,23 +1,337 @@
-<!DOCTYPE html>
-<html lang="zh">
-  <head>
-    <meta charset="UTF-8">
-    <title>云调用示例</title>
-    <meta name="description" content="此项目实现了免鉴权调用微信服务端接口">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link rel="shortcut icon" type="image/x-icon" href="/static/logo.ico">
-    <link rel="mask-icon" href="/static/logo.ico" color="#4C4C4C">
-    <link rel="apple-touch-icon-precomposed" href="/static/logo.png">
-    <link rel="stylesheet" type="text/css" href="/static/main.css">
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>青榄星球</title>
+    <script src="https://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
     <script src="/static/main.js"></script>
-  </head>
-  <body onselectstart="return false">
-    <div class="show">
-      <div class="title">微信云托管云调用模版</div>
-      <div class="des">此项目实现了免鉴权调用微信服务端接口</div>
-      <div class="des">以下功能使用了<a href="https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/sec-check/security.msgSecCheck.html">文字安全检查接口</a></div>
-      <input id="text" placeholder="在这里写点文字吧"/>
-      <button id="btn" onclick="review()">安全检查</button>
+    <style>
+        #navg {
+            width: 1240px;
+            margin: auto;
+        }
+
+        body {
+            background-color: #000;
+        }
+
+        .title {
+            color: #46C667;
+            font-size: 50px;
+            font-weight: 200;
+            padding: 200px;
+            text-align: center;
+        }
+
+        .tagBall {
+            width: 100%;
+            height: 100vw;
+            position: absolute;
+            top: 20vh;
+            /* left: 20px; */
+        }
+
+        .tag {
+            display: block;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            font-family: "微软雅黑";
+            font-weight: bold;
+        }
+
+        /* .tag:hover {
+            border: 1px solid #666;
+        } */
+
+        .form_vav td {
+            color: #a78b6f;
+        }
+
+        .avatar {
+            width: 15px;
+            height: 15px;
+            border-radius: 10px;
+        }
+
+        .voice {
+            height: 5rem;
+            width: 26rem;
+            background: #1bbc9b;
+            border-radius: 0 1rem 1rem;
+            padding: 1rem;
+            /* margin: 0 7rem; */
+        }
+
+        .bg {
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAAAYCAYAAAAF6fiUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NzlFRDZDRDNENzlFMTFFNkJDN0NFMjA2QTFFRTRDQkIiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NzlFRDZDRDJENzlFMTFFNkJDN0NFMjA2QTFFRTRDQkIiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MTAxQkEzQ0RENzM2MTFFNjgyMEI5MTNDRkQ0OTM5QUEiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MTAxQkEzQ0VENzM2MTFFNjgyMEI5MTNDRkQ0OTM5QUEiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4K4iKVAAACUUlEQVR42uSazytEURTHvTHjR4kaU8xsSDZSdmbjx4oSK8XGQrJlpSwYTSmxEWWhUIpsZK3kD7DRNBuSBZFCNjZ+JPKcV6ecXu/d3sy7595bc+vbfXPue5/749z77o83lm3bZYYFC8RZqAbQAigP2tXNj5aZF7gdkAZNk9+7WvnOCCgxRUCb9n/o1sk3pUH6QDHF/GNsoM+QeYfiy6qkFeLZDBb0GlTB4AAR/xXT9nXxZVa0WCekQd9Y0HOJjg3CHySviiZmfjO3AyIhnu0gBc0wjAIR/wLtW8z87aAOWAI9gqaYRoAff4ZUoi7EKCiUP462j4CdSCrfK4N1Ahpi6I0i/hPa50M4oFB+Dbm/SzXfL5MD4rUogxP8+Itozynm59E+q5ovyuQdHxphWh568XvR5kxq1SEn40L4e0XMA1L4EcEe7RTjLqYdqRf/gezQUwr5LxjXq+aLHPCFcTmTA7z4tutIQhXfLiJPKXyRA/oxzgW8v9DgxU+S62eF/ATGr6r5fg26Corj9RHD4Z0fvwfjS9CbQn4bxrfK+R6TyzxZNk260solTL4i/g3al10TsMXIryA72T7VfK8MnJO8X9CKy14lafXjxx8jFUsSeyUzfxhtPwHPoqTy/TJJMJzJiPgNpJdsuNJizPwztB/q4JtwHN2KW3sn3HuMOouR30l6bbsOvgkOyGIBnaPbRldalJl/h2knuvgmOKAWNAFKMUz4Iv4O6Z1xXXxTPxtazHy6khnVyS/Fb8IDpHGyuvmWgX9L4Q4toDnQFWhNN/9PgAEAR4w1ULjdCbEAAAAASUVORK5CYII=) right 0 no-repeat;
+            width: 3rem;
+            height: 3rem;
+            background-size: 400%;
+            margin: 1.2rem;
+        }
+
+        .voicePlay {
+            animation-name: voicePlay;
+            animation-duration: 1s;
+            animation-direction: normal;
+            animation-iteration-count: infinite;
+            animation-timing-function: steps(3);
+        }
+
+        @keyframes voicePlay {
+            0% {
+                background-position: 0;
+            }
+
+            100% {
+                background-position: 100%;
+            }
+        }
+
+        .control {
+            margin: 2rem;
+            position: fixed;
+            bottom: 10px;
+            font-size: 3rem;
+            line-height: 6rem;
+            color: #fff;
+        }
+
+        .control-avatar {
+            width: 6rem;
+            height: 6rem;
+            border-radius: 3rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dadiv">
+        <div class="title">
+            青 / 榄 / 星 / 球
+        </div>
+        <div class="tagBall">
+            <a class="tag" href="#"
+                onclick="onClick(this, 'https://yisi-1253291586.cos.ap-guangzhou.myqcloud.com/weekup/2022祝福词.m4a')">
+                <!-- <img class="avatar" src="https://yisi-1253291586.cos.ap-guangzhou.myqcloud.com/weekup/IMG_5785.JPG" /> -->
+                <span>一颗白球</span>
+            </a>
+        </div>
+        <div class="control">
+            <!-- <img class="control-avatar"
+                src="https://yisi-1253291586.cos.ap-guangzhou.myqcloud.com/weekup/IMG_5785.JPG" /> -->
+            <span>一颗白球</span>
+            <a href="#"
+                onclick="onClick(this, 'https://yisi-1253291586.cos.ap-guangzhou.myqcloud.com/weekup/2022祝福词.m4a')">
+                <div class="voice">
+                    <div class="bg"></div>
+                </div>
+            </a>
+        </div>
     </div>
-  </body>
+
+    <script>
+        function request(url, callback) {
+            var req = new XMLHttpRequest();
+            req.overrideMimeType("application/json");
+            req.open('GET', url, true);
+            req.onload = function () {
+                var jsonResponse = JSON.parse(req.responseText);
+                if (callback) callback(jsonResponse)
+            };
+            req.onerror = function (req, ev) {
+                if (callback) callback(null, ev)
+            }
+            req.send(null);
+        }
+
+        function getVoiceList() {
+            request('./voice', function (req, error) {
+                console.log('list', req, error)
+            })
+        }
+
+        // var amr = new BenzAMRRecorder();
+        // amr.initWithUrl('https://yisi-1253291586.cos.ap-guangzhou.myqcloud.com/weekup/voice/041bai4Dn__QQqXpykZlRPNK4Jo1BgxYkYfcdON513HQxK8HZbEAc9z6-lzkkjSb.amr').then(function () {
+        //     console.log('amr load')
+        // });
+        // amr.onEnded(function () {
+        //     console.log('播放完毕');
+        // })
+        getVoiceList();
+
+        document.body.addEventListener('touchmove', function (e) {
+            e.preventDefault();
+            amr.play();
+            console.log('play')
+        })
+
+        var tagEle = "querySelectorAll" in document ? document.querySelectorAll(".tag") : getClass("tag"),
+            paper = "querySelectorAll" in document ? document.querySelector(".tagBall") : getClass("tagBall")[0];
+        RADIUS = 400,
+            fallLength = 1024,
+            tags = [],
+            angleX = Math.PI / 1024,
+            angleY = Math.PI / 1024,
+            CX = paper.offsetWidth / 2,
+            CY = paper.offsetHeight / 2,
+            EX = paper.offsetLeft + document.body.scrollLeft + document.documentElement.scrollLeft,
+            EY = paper.offsetTop + document.body.scrollTop + document.documentElement.scrollTop,
+            audio = new Audio(),
+            playStatus = 'end';
+        audio.volume = 1;
+
+        function getClass(className) {
+            var ele = document.getElementsByTagName("*");
+            var classEle = [];
+            for (var i = 0; i < ele.length; i++) {
+                var cn = ele[i].className;
+                if (cn === className) {
+                    classEle.push(ele[i]);
+                }
+            }
+            return classEle;
+        }
+
+        function init() {
+            for (var i = 0; i < tagEle.length; i++) {
+                var a, b;
+                var k = -1 + (2 * (i + 1) - 1) / tagEle.length;
+                var a = Math.acos(k);
+                var b = a * Math.sqrt(tagEle.length * Math.PI);
+                var x = RADIUS * Math.sin(a) * Math.cos(b);
+                var y = RADIUS * Math.sin(a) * Math.sin(b);
+                var z = RADIUS * Math.cos(a);
+                var t = new tag(tagEle[i], x, y, z);
+                // tagEle[i].style.color = "rgb(" + parseInt(Math.random() * 255) + "," + parseInt(Math.random() * 255) + "," + parseInt(Math.random() * 255) + ")";
+                tags.push(t);
+                t.move();
+            }
+        }
+        Array.prototype.forEach = function (callback) {
+            for (var i = 0; i < this.length; i++) {
+                callback.call(this[i]);
+            }
+        }
+
+        function animate() {
+            setInterval(function () {
+                rotateX();
+                rotateY();
+                tags.forEach(function () {
+                    this.move();
+                })
+            }, 17)
+        }
+        if ("addEventListener" in window) {
+            paper.addEventListener("mousemove", function (event) {
+                var x = event.clientX - EX - CX;
+                var y = event.clientY - EY - CY;
+                angleY = x * 0.0001;
+                angleX = y * 0.0001;
+            });
+        } else {
+            paper.attachEvent("onmousemove", function (event) {
+                var x = event.clientX - EX - CX;
+                var y = event.clientY - EY - CY;
+                angleY = x * 0.0001;
+                angleX = y * 0.0001;
+            });
+        }
+
+        function rotateX() {
+            var cos = Math.cos(angleX);
+            var sin = Math.sin(angleX);
+            tags.forEach(function () {
+                var y1 = this.y * cos - this.z * sin;
+                var z1 = this.z * cos + this.y * sin;
+                this.y = y1;
+                this.z = z1;
+            })
+
+        }
+
+        function rotateY() {
+            var cos = Math.cos(angleY);
+            var sin = Math.sin(angleY);
+            tags.forEach(function () {
+                var x1 = this.x * cos - this.z * sin;
+                var z1 = this.z * cos + this.x * sin;
+                this.x = x1;
+                this.z = z1;
+            })
+        }
+        var tag = function (ele, x, y, z) {
+            this.ele = ele;
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+        tag.prototype = {
+            move: function () {
+                // if (playStatus !== 'end') return;
+
+                var scale = fallLength / (fallLength - this.z);
+                var alpha = (this.z + RADIUS) / (2 * RADIUS);
+                this.ele.style.fontSize = 13 * scale + "px";
+                this.ele.style.opacity = alpha + 0.5;
+                this.ele.style.filter = "alpha(opacity = " + (alpha + 0.5) * 100 + ")";
+                this.ele.style.zIndex = parseInt(scale * 100);
+                this.ele.style.left = this.x + CX - this.ele.offsetWidth / 2 + "px";
+                this.ele.style.top = this.y + CY - this.ele.offsetHeight / 2 + "px";
+
+                // var voice = this.ele.querySelectorAll(".voice")[0];
+                // if (voice) {
+                //     voice.style.paddingTop = 10 * scale + "px";
+                //     voice.style.paddingLeft = 10 * scale + "px";
+                //     voice.style.width = 85 * scale + "px";
+                //     voice.style.height = 20 * scale + "px";
+                //     var bg = voice.querySelectorAll(".bg")[0];
+                //     bg.style.width = 14 * scale + "px";
+                //     bg.style.height = 14 * scale + "px";
+                // }
+                var avatar = this.ele.querySelectorAll(".avatar")[0];
+                if (avatar) {
+                    avatar.style.width = 15 * scale + "px";
+                    avatar.style.height = 15 * scale + "px";
+                    avatar.style.borderRadius = 10 * scale + "px";
+                }
+            }
+        }
+        init();
+        animate();
+
+        function onClick(elem, url) {
+            // let elem = this
+            if (playStatus === 'pause') {
+                audio.play();
+                playStatus = 'playing'
+            } else if (playStatus === 'playing') {
+                audio.pause();
+                playStatus = 'pause'
+            } else if (playStatus === 'end') {
+                audio.src = url;
+                audio.preload = 'auto';
+                audio.addEventListener('play', () => {
+                    elem.querySelectorAll('.bg')[0].classList.add('voicePlay');
+                    playStatus = 'playing'
+                }, false)
+                audio.addEventListener('pause', () => {
+                    elem.querySelectorAll('.bg')[0].classList.remove('voicePlay');
+                }, false);
+                audio.addEventListener('ended', () => {
+                    elem.querySelectorAll('.bg')[0].classList.remove('voicePlay');
+                }, false);
+                audio.play();
+            }
+        }
+    </script>
+
+</body>
+
 </html>
