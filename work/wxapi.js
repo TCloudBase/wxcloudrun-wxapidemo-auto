@@ -74,14 +74,16 @@ async function call(name, method, data, ssl = true) {
           console.log(`${seqid != null ? '开放服务调用｜' + seqid : 'AccessToken调用'}`)
           // console.log('返回结果：', response.body)
           try {
-            resolve(JSON.parse(response.body))
+            if (response.headers['content-type'] === 'application/json') {
+              resolve(JSON.parse(response.body))
+            } else {
+              resolve(response.body)
+            }
           } catch (e) {
             console.log('网络请求错误', e.toString(), response.headers)
             resolve({ // 返回网络问题
               errcode: -1,
               errmsg: e.toString(),
-              data: response.body,
-              size: response.headers['content-length']
             })
           }
         }

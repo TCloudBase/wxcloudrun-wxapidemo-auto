@@ -13,7 +13,7 @@ router.get('/', async function (req, res, next) {
 router.get("/voice", async (req, res) => {
   try {
     const result = await VoiceMessage.findAll({
-      order: [['date', 'DESC']],
+      order: [['createdAt', 'DESC']],
       limit: 50
     })
     res.send({
@@ -36,9 +36,9 @@ router.post('/wx/call', async function (req, res, next) {
   console.log('wx call', body)
 
   if (body.MsgType === 'voice') {
-    const { data: stream, size, errcode, errmsg } = await wxapi.get('cgi-bin/media/get', `media_id=${body.MediaId}`, true)
-    if (errcode > 0) {
-      console.log('voice media error', errcode, errmsg)
+    const resp = await wxapi.get('cgi-bin/media/get', `media_id=${body.MediaId}`, true)
+    if (resp.errcode > 0 || !!resp.errmsg) {
+      console.log('voice media error', resp.errcode, resp.errmsg)
     }
 
     const Key = `weekup/voice/${body.MediaId}.amr`
@@ -46,7 +46,7 @@ router.post('/wx/call', async function (req, res, next) {
       Bucket,
       Region,
       Key,
-      Body: stream,
+      Body: resp,
       // ContentLength: size,
       ContentType: 'audio/amr'
     }, async function (err, data) {
@@ -60,7 +60,7 @@ router.post('/wx/call', async function (req, res, next) {
         name: '小姜',
         avatar_url: '',
         msg_url: data.Location,
-        date: body.CreateTime * 1000
+        date: new Date(body.CreateTime)
       })
       console.log('added', data.Location);
     });
