@@ -80,7 +80,8 @@ async function call(name, method, data, ssl = true) {
             resolve({ // 返回网络问题
               errcode: -1,
               errmsg: e.toString(),
-              data: response.body
+              data: response.body,
+              size: headers['content-length']
             })
           }
         }

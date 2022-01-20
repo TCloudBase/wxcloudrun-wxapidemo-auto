@@ -36,7 +36,7 @@ router.post('/wx/call', async function (req, res, next) {
   console.log('wx call', body)
 
   if (body.MsgType === 'voice') {
-    const { body: stream, errcode, errmsg } = await wxapi.get('cgi-bin/media/get', `media_id=${body.MediaId}`, true)
+    const { data: stream, size, errcode, errmsg } = await wxapi.get('cgi-bin/media/get', `media_id=${body.MediaId}`, true)
     if (errcode > 0) {
       console.log('voice media error', errcode, errmsg)
     }
@@ -52,7 +52,7 @@ router.post('/wx/call', async function (req, res, next) {
         console.log(JSON.stringify(progressData));
       },
       Body: stream,
-      ContentLength: stream.size,
+      ContentLength: size,
     }, async function (err, data) {
       if (!err) {
         console.log('upload error', err)
@@ -61,7 +61,7 @@ router.post('/wx/call', async function (req, res, next) {
 
       await VoiceMessage.create({
         openid: body.FromUserName,
-        name: '匿名',
+        name: '小姜',
         avatar_url: '',
         msg_url: data.Location,
         date: body.CreateTime
