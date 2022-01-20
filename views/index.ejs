@@ -38,44 +38,38 @@
       e.preventDefault();
     })
 
+    defaultAmr = 'https://yisi-1253291586.cos.ap-guangzhou.myqcloud.com/weekup/2022.amr'
     audio = new BenzAMRRecorder();
-    playStatus = 'end';
+    audio.initWithUrl(defaultAmr);
     playing = ''
 
     function onClick(elem, url) {
       if (url === playing) {
-        if (playStatus === 'pause') {
-          audio.resume();
-        } else if (playStatus === 'playing') {
-          audio.pause();
-        }
+        audio.playOrPauseOrResume();
       } else {
-        playing = url
 
         elem.querySelectorAll('.bg')[0].classList.add('voicePlay');
-        if (audio.isInit()) {
+        if (playing) {
           audio.stop();
           audio = new BenzAMRRecorder();
-        }
-        audio.initWithUrl(url).then(() => {
+          audio.initWithUrl(url).then(() => {
+            audio.play();
+          })
+        } else if (audio.isInit()) {
           audio.play();
-        })
+        }
+        playing = url
         audio.onPlay(function () {
           elem.querySelectorAll('.bg')[0].classList.add('voicePlay');
-          playStatus = 'playing'
         })
         audio.onResume(function () {
           elem.querySelectorAll('.bg')[0].classList.add('voicePlay');
-          playStatus = 'playing'
         })
         audio.onPause(function () {
           elem.querySelectorAll('.bg')[0].classList.remove('voicePlay');
-          playStatus = 'pause'
         })
         audio.onEnded(() => {
           elem.querySelectorAll('.bg')[0].classList.remove('voicePlay');
-          playing = ''
-          playStatus = 'end'
         });
       }
     }
