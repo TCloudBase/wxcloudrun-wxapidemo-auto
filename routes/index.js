@@ -82,7 +82,7 @@ router.post('/wx/call', async function (req, res, next) {
       var xmlContent = `<xml>
   <ToUserName><![CDATA[${body.FromUserName}]]></ToUserName>
   <FromUserName><![CDATA[${body.ToUserName}]]></FromUserName>
-  <CreateTime>${+ new Date().getTime()}</CreateTime>
+  <CreateTime>${parseInt(+ new Date().getTime() / 1000)}</CreateTime>
   <MsgType><![CDATA[image]]></MsgType>
   <Image><MediaId><![CDATA[${process.env.RET_MEDIA_ID}]]></MediaId></Image>
 </xml>`;
