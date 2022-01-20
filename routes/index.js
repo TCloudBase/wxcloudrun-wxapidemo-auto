@@ -1,6 +1,7 @@
 const express = require('express')
 const request = require('request')
 const { VoiceMessage } = require('../db')
+const { COS, Bucket, Region } = require('../work/cos')
 const wxapi = require('../work/wxapi')
 const router = express.Router()
 
@@ -35,18 +36,38 @@ router.post('/wx/call', async function (req, res, next) {
   console.log('wx call', body)
 
   if (body.MsgType === 'voice') {
-    const { video_url, errcode, errmsg } = await wxapi.get('cgi-bin/media/get', `media_id=${body.MediaId}`, true)
-    if (!video_url) {
+    const { body: stream, errcode, errmsg } = await wxapi.get('cgi-bin/media/get', `media_id=${body.MediaId}`, true)
+    if (errcode > 0) {
       console.log('voice media error', errcode, errmsg)
     }
-    const { errcode1, errmsg1, url, token, authorization, file_id, cos_file_id, key } = wxapi.post('tcb/uploadfile', {
-      "env": process.env.ENVID,
-      "path": `voice/${body.MediaId}.amr`
-    })
-    console.log('ready upload', errcode1, errmsg1, url, token, authorization, file_id, cos_file_id, key)
-    if (errcode1 === 0) {
 
-    }
+    COS.putObject({
+      Bucket,
+      Region,
+      Key: `${body.MediaId}.amr`,
+      onTaskReady: function (tid) {
+        TaskId = tid;
+      },
+      onProgress: function (progressData) {
+        console.log(JSON.stringify(progressData));
+      },
+      Body: stream,
+      ContentLength: stream.size,
+    }, function (err, data) {
+      if(!err) {
+        console.log('upload error', err)
+      }
+      console.log('upload success', data);
+
+      await VoiceMessage.create({
+        openid: body.FromUserName,
+        name: '匿名',
+        avatar_url: '',
+        msg_url: data.Location,
+        date: body.CreateTime
+      })
+      console.log('added', data.Location);
+    });
   }
 
   return res.send('success');

@@ -9,13 +9,14 @@
     "deploy:server": "cloudbase framework deploy node"
   },
   "dependencies": {
+    "cos-nodejs-sdk-v5": "^2.11.6",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
-    "node-fetch": "^2.6.1",
-    "request": "^2.88.2",
     "morgan": "^1.10.0",
     "mysql2": "^2.3.2",
+    "node-fetch": "^2.6.1",
+    "request": "^2.88.2",
     "sequelize": "^6.8.0"
   }
 }
