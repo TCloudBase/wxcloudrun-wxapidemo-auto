@@ -50,7 +50,6 @@ router.post('/wx/call', async function (req, res, next) {
       Region,
       Key,
       Body: voiceBuffer,
-      ContentLength: voiceBuffer.size,
       ContentType: 'audio/amr'
     }, async function (err, data) {
       if (err) {
