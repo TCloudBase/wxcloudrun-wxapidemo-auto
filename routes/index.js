@@ -72,7 +72,7 @@ router.post('/wx/call', async function (req, res, next) {
         FromUserName: body.ToUserName,
         CreateTime: parseInt(+ new Date() / 1000),
         MsgType: 'image',
-        MediaId: ''
+        MediaId: process.env.RET_MEDIA_ID
       })
     });
   }
