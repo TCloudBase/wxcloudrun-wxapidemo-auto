@@ -43,8 +43,8 @@ router.post('/wx/call', async function (req, res, next) {
 
 
     const Key = `weekup/voice/${body.MediaId}.amr`
-    const voiceBuffer = Buffer.from(resp, 'hex')
-    console.log('hex stream', typeof resp, headers['content-length'], voiceBuffer.length)
+    const voiceBuffer = Buffer.from(resp, 'binary')
+    console.log('binary stream', typeof resp, headers['content-length'], voiceBuffer.length)
     COS.putObject({
       Bucket,
       Region,
