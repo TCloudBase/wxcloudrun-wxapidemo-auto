@@ -78,25 +78,25 @@ router.post('/wx/call', async function (req, res, next) {
       })
       console.log('added', data.Location);
       fs.unlinkSync(name);
+    });
 
-//       var xmlContent = `<xml>
-//   <ToUserName><![CDATA[${body.FromUserName}]]></ToUserName>
-//   <FromUserName><![CDATA[${body.ToUserName}]]></FromUserName>
-//   <CreateTime>${Math.round(new Date().getTime()/1000)}</CreateTime>
-//   <MsgType><![CDATA[image]]></MsgType>
-//   <Image><MediaId><![CDATA[${process.env.RET_MEDIA_ID}]]></MediaId></Image>
-// </xml>`;
-var xmlContent = `<xml>
+    //       var xmlContent = `<xml>
+    //   <ToUserName><![CDATA[${body.FromUserName}]]></ToUserName>
+    //   <FromUserName><![CDATA[${body.ToUserName}]]></FromUserName>
+    //   <CreateTime>${Math.round(new Date().getTime()/1000)}</CreateTime>
+    //   <MsgType><![CDATA[image]]></MsgType>
+    //   <Image><MediaId><![CDATA[${process.env.RET_MEDIA_ID}]]></MediaId></Image>
+    // </xml>`;
+    var xmlContent = `<xml>
   <ToUserName><![CDATA[${body.FromUserName}]]></ToUserName>
   <FromUserName><![CDATA[${body.ToUserName}]]></FromUserName>
-  <CreateTime>${Math.round(new Date().getTime()/1000)}</CreateTime>
+  <CreateTime>${Math.round(new Date().getTime() / 1000)}</CreateTime>
   <MsgType><![CDATA[text]]></MsgType>
   <Content><![CDATA[终于等到你，还好我没放弃]]></Content>
 </xml>`;
-      console.log('return xml', xmlContent)
-      res.type('application/xml')
-      res.send(xmlContent)
-    });
+    console.log('return xml', xmlContent)
+    res.type('application/xml')
+    res.send(xmlContent)
   } else {
     return res.send('success');
   }
