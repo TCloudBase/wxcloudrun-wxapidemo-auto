@@ -41,6 +41,8 @@ router.post('/wx/call', async function (req, res, next) {
       console.log('voice media error', resp.errcode, resp.errmsg)
     }
 
+    console.log('typeof stream', typeof resp, resp.size, resp.length)
+
     const Key = `weekup/voice/${body.MediaId}.amr`
     COS.putObject({
       Bucket,
