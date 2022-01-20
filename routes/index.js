@@ -43,12 +43,13 @@ router.post('/wx/call', async function (req, res, next) {
     // }
 
     request.get(video_url, {}, async (error, response) => {
-      if (!error) {
+      if (error) {
         console.log('download media error', error);
       } else {
-        console.log('media length', response.headers);
+        console.log('media url', response.body)
+        // wxapi.post('/tcb/uploadfile', response.body)
       }
-    }) 
+    })
 
     return res.json(result)
   }
