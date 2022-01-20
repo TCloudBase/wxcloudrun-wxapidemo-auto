@@ -72,7 +72,7 @@ async function call(name, method, data, ssl = true) {
         } else {
           const seqid = response.headers['x-openapi-seqid']
           console.log(`${seqid != null ? '开放服务调用｜' + seqid : 'AccessToken调用'}`)
-          console.log('返回结果：', response.body)
+          // console.log('返回结果：', response.body)
           try {
             resolve(JSON.parse(response.body))
           } catch (e) {
@@ -81,7 +81,7 @@ async function call(name, method, data, ssl = true) {
               errcode: -1,
               errmsg: e.toString(),
               data: response.body,
-              size: headers['content-length']
+              size: response.headers['content-length']
             })
           }
         }
