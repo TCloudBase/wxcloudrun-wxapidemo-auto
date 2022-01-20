@@ -12,8 +12,8 @@ router.get('/', async function (req, res, next) {
 router.get('/images', async function (req, res, next) {
   res.send(await wxapi.post('cgi-bin/material/batchget_material', {
     type: 'image',
-    offset: 0,
-    count: 20
+    offset: req.query['offset'],
+    count: req.query['count']
   }))
 })
 
