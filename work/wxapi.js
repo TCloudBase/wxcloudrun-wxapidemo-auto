@@ -22,12 +22,12 @@ function getToken() {
 }
 
 async function post(name, data) {
-  return call(name, 'POST', data, ssl)
+  return call(name, 'POST', data)
 }
 
 
 async function get(name, data) {
-  return call(name, 'GET', data, ssl)
+  return call(name, 'GET', data)
 }
 
 /**
