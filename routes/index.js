@@ -9,7 +9,7 @@ router.get('/', async function (req, res, next) {
 })
 
 // get voice list
-app.get("/voice", async (req, res) => {
+router.get("/voice", async (req, res) => {
   const result = await VoiceMessage.findAll({
     order: ['date', 'DESC'],
     limit: 50
