@@ -47,6 +47,9 @@ async function call(name, method, data, ssl = true) {
     var options = {
       method: method,
       url: `https://api.weixin.qq.com/${name}?cloudbase_access_token=${token.token}&${method === 'GET' && data ? data : ''}`,
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: method === 'POST' && data ? JSON.stringify(data) : null,
       // ca: token.ca,
       // secureProtocol: 'TLSv1_2_method'
