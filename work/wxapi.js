@@ -44,7 +44,7 @@ async function call(name, method, data, ssl = true) {
     // 包装api请求
     // ca文件不存在并且ssl为true时，则附加token，否则则不附加token
     // ssl为false，说明尝试https遇到ssl问题，则证明是本地调试环境，并且开启了开放服务，所以http时无需传入token
-    console.log('token', token.token, data)
+    console.log(data, '&token=', token.token)
     var options = {
       method: method,
       url: `https://api.weixin.qq.com/${name}?cloudbase_access_token=${token.token}&${method === 'GET' && data ? data : ''}`,
