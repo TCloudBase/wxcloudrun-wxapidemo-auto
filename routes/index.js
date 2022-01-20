@@ -1,5 +1,5 @@
 const express = require('express')
-const request = require('request')
+const fs = require('fs');
 const { VoiceMessage } = require('../db')
 const { COS, Bucket, Region } = require('../work/cos')
 const wxapi = require('../work/wxapi')
@@ -36,21 +36,15 @@ router.post('/wx/call', async function (req, res, next) {
   console.log('wx call', body)
 
   if (body.MsgType === 'voice') {
-    const resp = await wxapi.get('cgi-bin/media/get', `media_id=${body.MediaId}`, true)
-    if (resp.errcode > 0 || !!resp.errmsg) {
-      console.log('voice media error', resp.errcode, resp.errmsg)
-    }
-
-
+    const name = await wxapi.download('cgi-bin/media/get', `media_id=${body.MediaId}`, true)
     const Key = `weekup/voice/${body.MediaId}.amr`
-    const voiceBuffer = Buffer.from(resp, 'binary')
-    console.log('binary stream', typeof resp, headers['content-length'], voiceBuffer.length)
-    COS.putObject({
+    COS.sliceUploadFile({
       Bucket,
       Region,
       Key,
-      Body: voiceBuffer,
-      ContentType: 'audio/amr'
+      FilePath: name,
+      ContentType: 'audio/amr',
+      asyncLimit:2 
     }, async function (err, data) {
       if (err) {
         console.log('upload error', err)
@@ -65,6 +59,7 @@ router.post('/wx/call', async function (req, res, next) {
         date: new Date(body.CreateTime)
       })
       console.log('added', data.Location);
+      fs.unlinkSync(name);
     });
   }
 

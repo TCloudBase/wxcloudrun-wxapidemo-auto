@@ -44,7 +44,7 @@ async function call(name, method, data, ssl = true) {
     // 包装api请求
     // ca文件不存在并且ssl为true时，则附加token，否则则不附加token
     // ssl为false，说明尝试https遇到ssl问题，则证明是本地调试环境，并且开启了开放服务，所以http时无需传入token
-    console.log(data, '&token=', token.token)
+    console.log(data, '&cloudbase_access_token=', token.token)
     var options = {
       method: method,
       url: `https://api.weixin.qq.com/${name}?cloudbase_access_token=${token.token}&${method === 'GET' && data ? data : ''}`,
@@ -98,9 +98,48 @@ async function call(name, method, data, ssl = true) {
   }
 }
 
+function download(name, data) {
+  console.log(`\n--------- 请求发起【${name}】 ---------`)
+  const token = getToken()
+  if (token.token != null) { // 如果token存在，开始发起请求
+    // 包装api请求
+    // ca文件不存在并且ssl为true时，则附加token，否则则不附加token
+    // ssl为false，说明尝试https遇到ssl问题，则证明是本地调试环境，并且开启了开放服务，所以http时无需传入token
+    console.log(data, '&cloudbase_access_token=', token.token)
+    var options = {
+      method: method,
+      url: `https://api.weixin.qq.com/${name}?cloudbase_access_token=${token.token}&${method === 'GET' && data ? data : ''}`,
+    }
+    // console.log(`${ssl === true ? '发起https请求' : '发起http请求'}，${ssl === true ? '带token' : '免token'}`)
+    return new Promise((resolve, reject) => {
+      let httpStream = request(options)
+      let writeStream = fs.createWriteStream(data);
+      httpStream.pipe(writeStream)
+      httpStream.on('response', (response) => {
+        console.log('response headers is: ', response.headers);
+      });
+      let totalLength = 0;
+      httpStream.on('data', (chunk) => {
+        totalLength += chunk.length;
+        console.log('recevied data size: ' + totalLength + 'bytes');
+      });
+      writeStream.on('close', () => {
+        console.log('download finished');
+        resolve(data)
+      });
+    })
+  } else {
+    return Promise.reject({
+      errcode: -110,
+      errmsg: 'access_token is not exist!'
+    })
+  }
+}
+
 module.exports = {
   getToken,
   call,
   post,
-  get
+  get,
+  download
 }
