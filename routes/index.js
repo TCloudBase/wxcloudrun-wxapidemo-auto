@@ -79,12 +79,19 @@ router.post('/wx/call', async function (req, res, next) {
       console.log('added', data.Location);
       fs.unlinkSync(name);
 
-      var xmlContent = `<xml>
+//       var xmlContent = `<xml>
+//   <ToUserName><![CDATA[${body.FromUserName}]]></ToUserName>
+//   <FromUserName><![CDATA[${body.ToUserName}]]></FromUserName>
+//   <CreateTime>${Math.round(new Date().getTime()/1000)}</CreateTime>
+//   <MsgType><![CDATA[image]]></MsgType>
+//   <Image><MediaId><![CDATA[${process.env.RET_MEDIA_ID}]]></MediaId></Image>
+// </xml>`;
+var xmlContent = `<xml>
   <ToUserName><![CDATA[${body.FromUserName}]]></ToUserName>
   <FromUserName><![CDATA[${body.ToUserName}]]></FromUserName>
   <CreateTime>${Math.round(new Date().getTime()/1000)}</CreateTime>
-  <MsgType><![CDATA[image]]></MsgType>
-  <Image><MediaId><![CDATA[${process.env.RET_MEDIA_ID}]]></MediaId></Image>
+  <MsgType><![CDATA[text]]></MsgType>
+  <Image><MediaId><![CDATA[hello]]></MediaId></Image>
 </xml>`;
       console.log('return xml', xmlContent)
       res.type('application/xml')
