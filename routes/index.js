@@ -41,30 +41,26 @@ router.post('/wx/call', async function (req, res, next) {
       console.log('voice media error', errcode, errmsg)
     }
 
+    const Key = `weekup/voice/${body.MediaId}.amr`
     COS.putObject({
       Bucket,
       Region,
-      Key: `${body.MediaId}.amr`,
-      onTaskReady: function (tid) {
-        TaskId = tid;
-      },
-      onProgress: function (progressData) {
-        console.log(JSON.stringify(progressData));
-      },
+      Key,
       Body: stream,
-      ContentLength: size,
+      // ContentLength: size,
+      ContentType: 'audio/amr'
     }, async function (err, data) {
-      if (!err) {
+      if (err) {
         console.log('upload error', err)
       }
-      console.log('upload success', data);
+      console.log('upload success', Key);
 
       await VoiceMessage.create({
         openid: body.FromUserName,
         name: '小姜',
         avatar_url: '',
         msg_url: data.Location,
-        date: body.CreateTime
+        date: body.CreateTime * 1000
       })
       console.log('added', data.Location);
     });
