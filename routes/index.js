@@ -69,7 +69,7 @@ router.post('/wx/call', async function (req, res, next) {
 
       await VoiceMessage.create({
         openid: body.FromUserName,
-        name: UNAME,
+        name: randName,
         avatar_url: '',
         media_id: body.MediaId,
         msg_id: body.MsgId,
