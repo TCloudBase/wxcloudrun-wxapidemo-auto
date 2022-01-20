@@ -10,14 +10,19 @@ router.get('/', async function (req, res, next) {
 
 // get voice list
 router.get("/voice", async (req, res) => {
-  const result = await VoiceMessage.findAll({
-    order: ['date', 'DESC'],
-    limit: 50
-  })
-  res.send({
-    code: 0,
-    data: result,
-  });
+  try {
+    const result = await VoiceMessage.findAll({
+      order: ['date', 'DESC'],
+      limit: 50
+    })
+    res.send({
+      code: 0,
+      data: result,
+    });
+  } catch (e) {
+    console.log('get voice error', e)
+    res.sendStatus(500)
+  }
 });
 
 router.post('/wx/call', async function (req, res, next) {
