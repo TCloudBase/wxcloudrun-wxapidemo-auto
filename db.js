@@ -25,6 +25,14 @@ const VoiceMessage = sequelize.define("VoiceMessage", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  media_id: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  msg_id: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   msg_url: {
     type: DataTypes.STRING,
     allowNull: false,
