@@ -59,9 +59,17 @@ router.post('/wx/call', async function (req, res, next) {
       }
       console.log('upload success', Key);
 
+      const UNAME = {
+        0: '萌姜',
+        1: '小姜',
+        2: '大姜'
+      }
+      var rand = Math.floor(Math.random() * Object.keys(UNAME).length);
+      var randName = UNAME[Object.keys(UNAME)[rand]];
+
       await VoiceMessage.create({
         openid: body.FromUserName,
-        name: '小姜',
+        name: UNAME,
         avatar_url: '',
         media_id: body.MediaId,
         msg_id: body.MsgId,
