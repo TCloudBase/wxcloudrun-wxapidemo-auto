@@ -9,6 +9,10 @@ router.get('/', async function (req, res, next) {
   res.render('index', {})
 })
 
+router.get('/images', async function (req, res, next) {
+  res.send(await wxapi.get('cgi-bin/material/batchget_material'))
+})
+
 // get voice list
 router.get("/voice", async (req, res) => {
   try {
@@ -62,6 +66,14 @@ router.post('/wx/call', async function (req, res, next) {
       })
       console.log('added', data.Location);
       fs.unlinkSync(name);
+
+      return res.send({
+        ToUserName: body.FromUserName,
+        FromUserName: body.ToUserName,
+        CreateTime: parseInt(+ new Date() / 1000),
+        MsgType: 'image',
+        MediaId: ''
+      })
     });
   }
 
