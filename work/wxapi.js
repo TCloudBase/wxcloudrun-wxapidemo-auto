@@ -76,10 +76,11 @@ async function call(name, method, data, ssl = true) {
           try {
             resolve(JSON.parse(response.body))
           } catch (e) {
-            console.log('网络请求错误', e.toString())
+            console.log('网络请求错误', e.toString(), response.headers)
             resolve({ // 返回网络问题
               errcode: -1,
-              errmsg: e.toString()
+              errmsg: e.toString(),
+              data: response.body
             })
           }
         }

@@ -42,17 +42,19 @@ router.post('/wx/call', async function (req, res, next) {
     }
     // }
 
-    request.get(video_url, {}, async (error, response) => {
-      if (error) {
-        console.log('download media error', error);
-      } else {
-        console.log('media url', response.body)
-        // wxapi.post('/tcb/uploadfile', response.body)
-      }
+    // request.get(video_url, {}, async (error, response) => {
+    //   if (error) {
+    //     console.log('download media error', error);
+    //   } else {
+    const { errcode, errmsg, url, token, authorization, file_id, cos_file_id, key } = wxapi.post('/tcb/uploadfile', {
+      "env": process.env.ENVID,
+      "path": `voice/${body.MediaId}.amr`
     })
-
-    return res.json(result)
+    console.log('ready upload', errcode, errmsg, url, token, authorization, file_id, cos_file_id, key)
   }
+  // })
+
+  // }
 
   return res.send('success');
 })
