@@ -91,7 +91,7 @@ var xmlContent = `<xml>
   <FromUserName><![CDATA[${body.ToUserName}]]></FromUserName>
   <CreateTime>${Math.round(new Date().getTime()/1000)}</CreateTime>
   <MsgType><![CDATA[text]]></MsgType>
-  <Image><MediaId><![CDATA[hello]]></MediaId></Image>
+  <Content><![CDATA[终于等到你，还好我没放弃]]></Content>
 </xml>`;
       console.log('return xml', xmlContent)
       res.type('application/xml')
