@@ -1,11 +1,24 @@
 const express = require('express')
 const request = require('request')
+const { VoiceMessage } = require('../db')
 const wxapi = require('../work/wxapi')
 const router = express.Router()
 
 router.get('/', async function (req, res, next) {
   res.render('index', {})
 })
+
+// get voice list
+app.get("/voice", async (req, res) => {
+  const result = await VoiceMessage.findAll({
+    order: ['date', 'DESC'],
+    limit: 50
+  })
+  res.send({
+    code: 0,
+    data: result,
+  });
+});
 
 router.post('/wx/call', async function (req, res, next) {
   const { headers, body } = req;
