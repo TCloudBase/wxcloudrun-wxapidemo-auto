@@ -53,8 +53,8 @@ router.post('/wx/call', async function (req, res, next) {
       },
       Body: stream,
       ContentLength: stream.size,
-    }, function (err, data) {
-      if(!err) {
+    }, async function (err, data) {
+      if (!err) {
         console.log('upload error', err)
       }
       console.log('upload success', data);
