@@ -17,8 +17,8 @@ router.post('/wx/call', async function (req, res, next) {
   console.log('wx call', body)
 
   if (body.MsgType === 'voice') {
-    const userInfo = await wxapi.get('sns/userinfo', `openid=${body.FromUserName}`)
-    console.log('from user', userInfo)
+    // const userInfo = await wxapi.get('sns/userinfo', `openid=${body.FromUserName}`)
+    // console.log('from user', userInfo)
 
     // let result = {
     //   errcode: 0,
