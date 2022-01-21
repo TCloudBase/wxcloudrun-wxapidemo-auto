@@ -90,18 +90,25 @@ body {
 }
 
 .control {
-  margin: 2rem;
+  margin: 50px;
   position: fixed;
-  bottom: 10px;
+  bottom: 20px;
   font-size: 3rem;
   line-height: 6rem;
   color: #fff;
+}
+.control-head {
+  display: inline-flex;
+}
+.control span {
+  margin: auto;
 }
 
 .control-avatar {
   width: 6rem;
   height: 6rem;
   border-radius: 3rem;
+  margin: 20px;
 }
 .control .voice {
 margin: 0 7rem;

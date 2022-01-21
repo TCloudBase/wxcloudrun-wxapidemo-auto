@@ -5,7 +5,6 @@
   <meta charset="utf-8">
   <title>青榄星球</title>
   <meta name="description" content="青榄星球">
-  <meta name="viewport" content="user-scalable=no">
   <link rel="shortcut icon" type="image/x-icon" href="/static/logo.ico">
   <link rel="mask-icon" href="/static/logo.ico" color="#4C4C4C">
   <link rel="apple-touch-icon-precomposed" href="/static/logo.png">
@@ -22,8 +21,10 @@
     <div class="tagBall" id="tagBall">
     </div>
     <div class="control">
-      <img class="control-avatar" src="https://yisi-1253291586.cos.ap-guangzhou.myqcloud.com/weekup/IMG_5785.JPG" />
-      <span>一颗白球</span>
+      <div class="control-head">
+        <img id="contraol-avatar" class="control-avatar" src="https://yisi-1253291586.cos.ap-guangzhou.myqcloud.com/weekup/IMG_5785.JPG" />
+        <span id="contraol-name">一颗白球</span>
+      </div>
       <a href="#" onclick="onClick(this, 'https://yisi-1253291586.cos.ap-guangzhou.myqcloud.com/weekup/2022.amr')">
         <div class="voice">
           <div class="bg"></div>
@@ -34,21 +35,26 @@
   <script src="/static/data.js"></script>
   <script>
 
-    document.body.addEventListener('touchmove', function (e) {
-      e.preventDefault();
-    })
+    // document.body.addEventListener('touchmove', function (e) {
+    //   e.preventDefault();
+    // })
 
     defaultAmr = 'https://yisi-1253291586.cos.ap-guangzhou.myqcloud.com/weekup/2022.amr'
+    defaultAvatar = "https://yisi-1253291586.cos.ap-guangzhou.myqcloud.com/weekup/IMG_5785.JPG"
     audio = new BenzAMRRecorder();
     audio.initWithUrl(defaultAmr);
     playing = ''
+    // avatar = 'https://7072-prod-0gl05vc072c6e785-1309342121.tcb.qcloud.la/qinglan.jpeg'
 
-    function onClick(elem, url) {
+    function onClick(elem, url, name) {
       if (url === playing) {
-        audio.playOrPauseOrResume();
+        if (audio.isInit()) {
+          audio.playOrPauseOrResume();
+        }
       } else {
-
         elem.querySelectorAll('.bg')[0].classList.add('voicePlay');
+        // window.document.getElementById('contraol-name').innerText = name;
+        // window.document.getElementById('contraol-avatar').src = avatar;
         if (playing) {
           audio.stop();
           audio = new BenzAMRRecorder();
