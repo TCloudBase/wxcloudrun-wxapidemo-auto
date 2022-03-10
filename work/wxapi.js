@@ -37,7 +37,7 @@ async function call (name, data, ssl = true) {
     // ssl为false，说明尝试https遇到ssl问题，则证明是本地调试环境，并且开启了开放服务，所以http时无需传入token
     var options = {
       method: 'POST',
-      url: `${token.ca == null ? 'https' : 'http'}://api.weixin.qq.com/${name}${token.ca == null && ssl === true ? '?cloudbase_access_token=' + token.token : ''}`,
+      url: `${ssl === true ? 'https' : 'http'}://api.weixin.qq.com/${name}${token.ca == null && ssl === true ? '?cloudbase_access_token=' + token.token : ''}`,
       headers: {
         'Content-Type': 'application/json'
       },
