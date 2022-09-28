@@ -22,6 +22,7 @@
   ``` bash
   cat /.tencentcloudbase/wx/cloudbase_access_token
   ```
+**这一步已无效，可以参见[此文档](https://developers.weixin.qq.com/miniprogram/dev/wxcloudrun/src/guide/weixin/token.html)，2022年7月后创建的环境均不再支持，请使用开放接口服务，所以直接忽略掉这个用法，demo里有直接的开放接口服务方法。**
 
 ## 项目总结
 
